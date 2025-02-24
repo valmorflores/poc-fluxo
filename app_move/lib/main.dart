@@ -1,3 +1,4 @@
+import 'package:app_move/anchor_on_off.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -30,7 +31,13 @@ class _GroupedWidgetsPageState extends State<GroupedWidgetsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Widgets Agrupados')),
+      appBar: AppBar(title: const Text('Widgets Agrupados'), 
+      actions: [InkWell(child:Icon(Icons.abc),onTap: (){
+         Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const AnchorOnOff()),
+  );
+      },)],),
       body: Stack(
         children: [
           // Widget pai (azul) que pode ser arrastado
