@@ -1,5 +1,7 @@
 import 'package:app_move/anchor_on_off.dart';
+import 'package:app_move/editor_fluxo.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() => runApp(const MyApp());
 
@@ -8,7 +10,8 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Agrupamento Relativo',
       home: const GroupedWidgetsPage(),
     );
@@ -32,7 +35,15 @@ class _GroupedWidgetsPageState extends State<GroupedWidgetsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Widgets Agrupados'), 
-      actions: [InkWell(child:Icon(Icons.abc),onTap: (){
+      actions: [
+        InkWell(child: Icon(Icons.start),onTap: (){
+     Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => VisualPage()),
+  );
+        },),
+        
+        InkWell(child:Icon(Icons.abc),onTap: (){
          Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => const AnchorOnOff()),
