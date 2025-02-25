@@ -1,17 +1,17 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
 /// Modelo base para os componentes.
-/// Se o componente estiver ancorado (parent != null),
-/// seu campo [position] representa o offset relativo ao pai.
+/// Quando ancorado (parent != null), [position] é considerado como offset relativo ao pai.
 class ContainerModel {
   final int id;
   Offset position;
   ContainerModel? parent;
   List<ContainerModel> children;
-  bool isRelative; // indica se a posição é relativa (quando ancorado)
-  bool isSelected; // para feedback visual
+  bool isRelative;
+  bool isSelected;
 
   ContainerModel({
     required this.id,
@@ -22,48 +22,21 @@ class ContainerModel {
     this.isSelected = false,
   }) : children = children ?? [];
 
-  /// Calcula recursivamente a posição absoluta do componente.
+  /// Retorna a posição absoluta deste componente.
   Offset getAbsolutePosition() {
     if (parent == null) return position;
     return parent!.getAbsolutePosition() + position;
   }
 
-
-
-  /// Desancora o componente:
-  /// Converte sua posição relativa (ao pai) em absoluta e remove o vínculo.
+  /// Desancora o componente, convertendo sua posição relativa em absoluta.
   void detach() {
     if (parent != null) {
-      // Calcula a posição absoluta
-      final absolutePos = getAbsolutePosition();
-      // Remove este componente da lista de filhos do pai
+      final absPos = getAbsolutePosition();
       parent!.children.remove(this);
-      // Define a posição absoluta e zera a flag de relativo
-      position = absolutePos;
       parent = null;
       isRelative = false;
+      position = absPos;
     }
-  }
-}
-
-extension AnchorExtension on ContainerModel {
-  /// Ancorar este componente ao [newParent]:
-  /// Converte a posição absoluta em relativa ao novo pai e atualiza a hierarquia.
-  void anchorTo(ContainerModel newParent) {
-    // Se já estiver ancorado, remove da lista de filhos do pai antigo.
-    if (parent != null) {
-      parent!.children.remove(this);
-    }
-    // Calcula a posição absoluta do componente.
-    final absolutePos = getAbsolutePosition();
-    // Calcula a posição absoluta do novo pai.
-    final parentAbs = newParent.getAbsolutePosition();
-    // Define a posição relativa (offset) em relação ao novo pai.
-    position = absolutePos - parentAbs;
-    // Atualiza o pai e a lista de filhos.
-    parent = newParent;
-    newParent.children.add(this);
-    isRelative = true;
   }
 }
 
@@ -93,16 +66,20 @@ class RectangleModel extends ContainerModel {
         );
 }
 
-/// Modelo para uma linha que conecta dois componentes.
+/// Modelo para a linha que conecta dois componentes, com opção de curva.
 class LineModel {
   final int id;
   final ContainerModel from;
   final ContainerModel to;
+  final bool isCurved;        // Se true, a linha será desenhada com curva.
+  final double curveIntensity; // Intensidade da curva.
 
   LineModel({
     required this.id,
     required this.from,
     required this.to,
+    this.isCurved = false,
+    this.curveIntensity = 20.0,
   });
 }
 
@@ -124,7 +101,7 @@ class MovementModel {
   }
 }
 
-/// Controller GetX que gerencia componentes, linhas, zoom e pan.
+/// Controller GetX que gerencia os componentes, linhas, zoom e pan.
 class ContainerController extends GetxController {
   var containerList = <ContainerModel>[].obs;
   var lineList = <LineModel>[].obs;
@@ -140,6 +117,7 @@ class ContainerController extends GetxController {
     containerList.remove(container);
   }
 
+  /// Atualiza o pai de um componente e marca como relativo.
   void updateParent(ContainerModel container, ContainerModel? newParent) {
     container.parent?.children.remove(container);
     container.parent = newParent;
@@ -180,10 +158,11 @@ class ContainerController extends GetxController {
 }
 
 /// Página visual com área de desenho e controles.
-class VisualPage extends StatelessWidget {
+class VisualSinglePage extends StatelessWidget {
   final ContainerController controller = Get.put(ContainerController());
   final RxInt idCounter = 0.obs;
-  VisualPage({Key? key}) : super(key: key);
+
+  VisualSinglePage({Key? key}) : super(key: key);
 
   /// Cria um novo retângulo com posição incremental.
   void _addNewRectangle() {
@@ -196,31 +175,24 @@ class VisualPage extends StatelessWidget {
     controller.addContainer(newRect);
   }
 
-  void _linkSelected() {
+  /// Vincula dois componentes selecionados, criando uma linha.
+  /// Parâmetro [curved] define se a linha será curva; [curveIntensity] ajusta a intensidade.
+  void _linkSelected({bool curved = false, double curveIntensity = 20.0}) {
     final selected = controller.selectedContainers;
     if (selected.length == 2) {
       final newLine = LineModel(
         id: DateTime.now().millisecondsSinceEpoch,
         from: selected[0],
         to: selected[1],
+        isCurved: curved,
+        curveIntensity: curveIntensity,
       );
       controller.addLine(newLine);
     } else {
       Get.snackbar('Link', 'Selecione exatamente 2 elementos para vincular');
     }
   }
-  
-  void _anchorSelected() {
-    final selected = controller.selectedContainers;
-    if (selected.length == 2) {
-      selected[0].anchorTo(         selected[1]
-      );
-      Get.snackbar('Ancora', 'Itens ancorados');
-    
-    } else {
-      Get.snackbar('Ancora', 'Selecione exatamente 2 elementos para vincular');
-    }
-  }
+
   void _unlinkSelected() {
     final selected = controller.selectedContainers;
     if (selected.length == 2) {
@@ -251,9 +223,7 @@ class VisualPage extends StatelessWidget {
     }
   }
 
-  /// Nova função de desancorar:
-  /// Para cada componente selecionado que está ancorado, converte sua posição relativa
-  /// em absoluta e remove o vínculo com o pai.
+  /// Desancora os componentes selecionados, convertendo sua posição relativa em absoluta.
   void _detachSelected() {
     final selected = controller.selectedContainers;
     if (selected.isNotEmpty) {
@@ -265,6 +235,18 @@ class VisualPage extends StatelessWidget {
       controller.containerList.refresh();
     } else {
       Get.snackbar('Desancorar', 'Nenhum elemento selecionado');
+    }
+  }
+
+  /// Função para ancorar um item em outro.
+  /// Ao selecionar exatamente 2 elementos, o segundo será ancorado no primeiro.
+  void _anchorSelected() {
+    final selected = controller.selectedContainers;
+    if (selected.length == 2) {
+      selected[1].anchorTo(selected[0]);
+      controller.containerList.refresh();
+    } else {
+      Get.snackbar('Ancorar', 'Selecione exatamente 2 elementos para ancorar');
     }
   }
 
@@ -299,7 +281,7 @@ class VisualPage extends StatelessWidget {
                   ..scale(controller.zoomModel.value.factor),
                 child: Stack(
                   children: [
-                    // Desenha as linhas conectando os componentes.
+                    // Desenha as linhas entre os componentes.
                     Positioned.fill(
                       child: CustomPaint(
                         painter: LinePainter(controller.lineList),
@@ -320,8 +302,8 @@ class VisualPage extends StatelessWidget {
                             container.isSelected = !container.isSelected;
                             controller.containerList.refresh();
                           },
-                          // Se o componente estiver livre (desancorado), permite arrastar
                           onPanUpdate: (details) {
+                            // Permite arrastar livremente apenas se estiver desancorado.
                             if (container.parent == null) {
                               final newPos = container.position + details.delta;
                               controller.moveContainer(container, newPos);
@@ -339,12 +321,12 @@ class VisualPage extends StatelessWidget {
                               color: container is RectangleModel
                                   ? (container as RectangleModel).color
                                   : Colors.grey,
-                              // Se estiver selecionado, borda laranja;
-                              // Se livre, borda verde; caso contrário, preta.
                               border: Border.all(
                                 color: container.isSelected
                                     ? Colors.orange
-                                    : (container.parent == null ? Colors.green : Colors.black),
+                                    : (container.parent == null
+                                        ? Colors.green
+                                        : Colors.black),
                                 width: container.isSelected ? 4 : 2,
                               ),
                             ),
@@ -356,12 +338,12 @@ class VisualPage extends StatelessWidget {
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
-                                // Indicador de componente livre (desancorado).
-                                if (container.parent == null)
+                                if (container.parent != null)
                                   const Positioned(
                                     top: 0,
                                     right: 0,
-                                    child: Icon(Icons.lock_open, size: 16, color: Colors.green),
+                                    child: Icon(Icons.lock_open,
+                                        size: 16, color: Colors.white),
                                   ),
                               ],
                             ),
@@ -374,7 +356,7 @@ class VisualPage extends StatelessWidget {
               );
             }),
           ),
-          // Painel superior com os botões de ação.
+          // Painel superior com botões de ação.
           Positioned(
             top: 10,
             left: 10,
@@ -391,10 +373,13 @@ class VisualPage extends StatelessWidget {
                       child: const Text('Adicionar Elemento'),
                     ),
                     ElevatedButton(
-                      onPressed: _linkSelected,
-                      child: const Text('Vincular Selecionados'),
+                      onPressed: () => _linkSelected(curved: false),
+                      child: const Text('Link Reta'),
                     ),
-                    
+                    ElevatedButton(
+                      onPressed: () => _linkSelected(curved: true, curveIntensity: 30.0),
+                      child: const Text('Link Curva'),
+                    ),
                     ElevatedButton(
                       onPressed: _unlinkSelected,
                       child: const Text('Desvincular Selecionados'),
@@ -404,14 +389,12 @@ class VisualPage extends StatelessWidget {
                       child: const Text('Remover Selecionados'),
                     ),
                     ElevatedButton(
-                      onPressed:  _anchorSelected
-                   ,
-                      child: const Text('Ancorar Selecionados'),
-                    ),
-                    
-                    ElevatedButton(
                       onPressed: _detachSelected,
                       child: const Text('Desancorar Selecionados'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _anchorSelected,
+                      child: const Text('Ancorar Selecionados'),
                     ),
                     ElevatedButton(
                       onPressed: _zoomIn,
@@ -432,19 +415,57 @@ class VisualPage extends StatelessWidget {
   }
 }
 
-/// CustomPainter que desenha as linhas conectando os componentes.
+/// Extensão para adicionar a funcionalidade de ancorar um componente a outro.
+extension AnchorExtension on ContainerModel {
+  void anchorTo(ContainerModel newParent) {
+    if (parent != null) {
+      parent!.children.remove(this);
+    }
+    final absPos = getAbsolutePosition();
+    final parentAbs = newParent.getAbsolutePosition();
+    position = absPos - parentAbs;
+    parent = newParent;
+    newParent.children.add(this);
+    isRelative = true;
+  }
+}
+
+/// CustomPainter para desenhar as linhas conectando os componentes.
+/// Se [isCurved] for true, desenha uma curva com base em [curveIntensity]; caso contrário, desenha uma reta.
 class LinePainter extends CustomPainter {
   final List<LineModel> lines;
   LinePainter(this.lines);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.red..strokeWidth = 2;
+    final paint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
     for (var line in lines) {
-      canvas.drawLine(line.from.getAbsolutePosition(), line.to.getAbsolutePosition(), paint);
+      final start = line.from.getAbsolutePosition();
+      final end = line.to.getAbsolutePosition();
+
+      if (line.isCurved) {
+        final midPoint = Offset((start.dx + end.dx) / 2, (start.dy + end.dy) / 2);
+        final dx = end.dx - start.dx;
+        final dy = end.dy - start.dy;
+        final len = math.sqrt(dx * dx + dy * dy);
+        final perpendicular = len != 0 ? Offset(-dy / len, dx / len) : Offset.zero;
+        final controlPoint = midPoint + perpendicular * line.curveIntensity;
+        final path = Path();
+        path.moveTo(start.dx, start.dy);
+        path.quadraticBezierTo(controlPoint.dx, controlPoint.dy, end.dx, end.dy);
+        canvas.drawPath(path, paint);
+      } else {
+        canvas.drawLine(start, end, paint);
+      }
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
+
+

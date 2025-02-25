@@ -3,6 +3,8 @@ import 'package:app_move/editor_fluxo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'editor_fluxo_advanced.dart';
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -36,10 +38,16 @@ class _GroupedWidgetsPageState extends State<GroupedWidgetsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Widgets Agrupados'), 
       actions: [
-        InkWell(child: Icon(Icons.start),onTap: (){
+        InkWell(child: Icon(Icons.place),onTap: (){
      Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => VisualPage()),
+  );
+        },),
+        InkWell(child: Icon(Icons.start),onTap: (){
+     Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => VisualSinglePage()),
   );
         },),
         
