@@ -149,11 +149,12 @@ class DecisionModel extends ContainerModel {
     // Porta selecionável à esquerda.
     children.add(PortModel(
       id: id * 10 + 1,
-      position: Offset(-10, height / 2 - 5),
+      position: Offset(-100, height / 2 - 5),
       color: Colors.blue,
     ));
     // Porta selecionável no quadrante superior direito.
     children.add(PortModel(
+    
       id: id * 10 + 2,
       position: Offset(width, height / 4 - 5),
       color: Colors.blue,
@@ -329,7 +330,7 @@ class VisualPage extends StatelessWidget {
           50 + (idCounter.value * 20).toDouble()),
       width: 100,
       height: 100,
-      color: Colors.orange,
+      color: Colors.black38,
     );
     controller.addContainer(newDecision);
   }
@@ -601,14 +602,14 @@ class VisualPage extends StatelessWidget {
                         }
                       },
                       child: Container(
-                        width: (port as PortModel).diameter,
-                        height: port.diameter,
+                        width: 15,
+                        height:10,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: port.color,
+                          color: Colors.red,
                           border: Border.all(
                             color: port.isSelected
-                                ? Colors.orange
+                                ? Colors.black
                                 : (port.parent == null ? Colors.green : Colors.black),
                             width: port.isSelected ? 4 : 2,
                           ),
