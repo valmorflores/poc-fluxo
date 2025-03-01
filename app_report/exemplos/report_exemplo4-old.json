@@ -1,0 +1,137 @@
+{
+    "bands": [
+        {
+            "type": "Header",
+            "isSelected": false,
+            "elements": [
+                {
+                    "type": "text",
+                    "text": "Id",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "isSelected": false,
+                    "isEditing": true
+                },
+                {
+                    "type": "field",
+                    "text": "Nome",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "EndereÃ§o",
+                    "width": 643.0,
+                    "height": 42.0,
+                    "isSelected": false,
+                    "isEditing": true
+                },
+                {
+                    "type": "text",
+                    "text": "",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "field",
+                    "text": "",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "isSelected": false,
+                    "isEditing": false
+                }
+            ]
+        },
+        {
+            "type": "MasterData",
+            "dataset": "SQLQuery1",
+            "isSelected": false,
+            "elements": [
+                {
+                    "type": "text",
+                    "text": "[SQLQuery1.COMPANY]",
+                    "width": 392.0,
+                    "height": 41.0,
+                    "isSelected": false,
+                    "isEditing": false
+                }
+            ]
+        },
+        {
+            "type": "DetailData",
+            "dataset": "SQLQuery2",
+            "isSelected": false,
+            "elements": []
+        }
+    ],
+    "datasets": [
+        {
+            "type": "Dataset",
+            "name": "SQLQuery1",
+            "data": [
+                {
+                    "ID": 1,
+                    "COMPANY": "TechNova SoluÃ§Ãµes",
+                    "ADDRESS": "Rua das Flores, 123",
+                    "CITY": "SÃ£o Paulo",
+                    "STATE": "SP",
+                    "ZIP": "01234-567",
+                    "EMAIL": "contato@technova.com.br"
+                },
+                {
+                    "ID": 2,
+                    "COMPANY": "XyZ",
+                    "ADDRESS": "Rua das Rosas, 456",
+                    "CITY": "Rio de Janeiro",
+                    "STATE": "RJ",
+                    "ZIP": "98765-432",
+                    "EMAIL": "suporte@xyz.com"
+                }
+            ]
+        },
+        {
+            "type": "Dataset",
+            "name": "SQLQuery2",
+            "data": [
+                {
+                    "ID": 1,
+                    "TASKNAME": "TechNova SoluÃ§Ãµes",
+                    "DATECREATED": "15/01/2024"
+                },
+                {
+                    "ID": 2,
+                    "TASKNAME": "XyZ",
+                    "DATECREATED": "15/01/2024"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,318 @@
+{
+    "bands": [
+        {
+            "type": "Header",
+            "isSelected": false,
+            "height": 185.0,
+            "elements": [
+                {
+                    "type": "text",
+                    "text": "Ficha de Atendimento",
+                    "width": 299.0,
+                    "height": 33.0,
+                    "left": 10.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 18,
+                    "top": 7.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "field",
+                    "text": "Nome",
+                    "width": 167.0,
+                    "height": 29.0,
+                    "left": 10.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 41.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "Endereco",
+                    "width": 736.0,
+                    "height": 31.0,
+                    "left": 10.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 71.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "left": 617.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 10.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "left": 316.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 8.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "",
+                    "width": 100.0,
+                    "height": 40.0,
+                    "left": 722.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 10.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "EMPRESA",
+                    "width": 384.0,
+                    "height": 32.0,
+                    "left": 9.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": true,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 108.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "CIDADE",
+                    "width": 263.0,
+                    "height": 32.0,
+                    "left": 395.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": true,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 108.0,
+                    "isSelected": false,
+                    "isEditing": false
+                }
+            ]
+        },
+        {
+            "type": "MasterData",
+            "dataset": "SQLQuery1",
+            "isSelected": false,
+            "height": 30.0,
+            "elements": [
+                {
+                    "type": "text",
+                    "text": "[SQLQuery1.COMPANY]",
+                    "width": 381.0,
+                    "height": 26.0,
+                    "left": 11.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 0.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "[SQLQuery1.CITY]",
+                    "width": 249.0,
+                    "height": 26.0,
+                    "left": 394.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 0.0,
+                    "isSelected": false,
+                    "isEditing": false
+                }
+            ]
+        },
+        {
+            "type": "DetailData",
+            "dataset": "SQLQuery2",
+            "relation_dataset": "SQLQuery1",
+            "relation_fields": "SQLQuery1.ID == SQLQuery2.CLIENTID ",
+            "isSelected": false,
+            "height": 50.0,
+            "elements": [
+                {
+                    "type": "text",
+                    "text": "[SQLQuery2.ID]",
+                    "width": 70.0,
+                    "height": 30.0,
+                    "left": 16.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 4.0,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "[SQLQuery2.TASKNAME]",
+                    "width": 561.0,
+                    "height": 29.0,
+                    "left": 90.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 4.0,
+                    "isSelected": true,
+                    "isEditing": false
+                }
+            ]
+        },
+        {
+            "type": "Footer",
+            "isSelected": false,
+            "height": 120.0,
+            "elements": [
+                {
+                    "type": "text",
+                    "text": "",
+                    "width": 306.0,
+                    "height": 49.0,
+                    "left": 4.0,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 4.0,
+                    "isSelected": false,
+                    "isEditing": false
+                }
+            ]
+        },
+        {
+            "type": "Footer",
+            "isSelected": false,
+            "height": 80.0,
+            "elements": []
+        }
+    ],
+    "datasets": [
+        {
+            "type": "Dataset",
+            "name": "SQLQuery1",
+            "data": [
+                {
+                    "ID": 1,
+                    "COMPANY": "TECNOVA",
+                    "ADDRESS": "Rua das Flores, 123",
+                    "CITY": "SAO PAULO",
+                    "STATE": "SP",
+                    "ZIP": "01234-567",
+                    "EMAIL": "contato@technova.com.br"
+                },
+                {
+                    "ID": 2,
+                    "COMPANY": "XyZ",
+                    "ADDRESS": "Rua das Rosas, 456",
+                    "CITY": "Rio de Janeiro",
+                    "STATE": "RJ",
+                    "ZIP": "98765-432",
+                    "EMAIL": "suporte@xyz.com"
+                },
+                {
+                    "ID": 3,
+                    "COMPANY": "CRIATIVA SISTEMAS DE GESTAO",
+                    "ADDRESS": "Rua das Rosas, 456",
+                    "CITY": "PORTO ALEGRE",
+                    "STATE": "RS",
+                    "ZIP": "98765-432",
+                    "EMAIL": "suporte@xyz.com"
+                },
+                {
+                    "ID": 3,
+                    "COMPANY": "DATABASE",
+                    "ADDRESS": "Rua da Praia, 7050",
+                    "CITY": "PORTO ALEGRE",
+                    "STATE": "RS",
+                    "ZIP": "90687-000",
+                    "EMAIL": "suporte@criativa.app"
+                }
+            ]
+        },
+        {
+            "type": "Dataset",
+            "name": "SQLQuery2",
+            "data": [
+                {
+                    "ID": 1,
+                    "TASKNAME": "REGISTRO ADICIONAL CONFORME NECESSARIO",
+                    "DATECREATED": "15/01/2024",
+                    "CLIENTID": 1
+                },
+                {
+                    "ID": 2,
+                    "TASKNAME": "DADOS EXTRAS",
+                    "DATECREATED": "15/01/2024",
+                    "CLIENTID": 2
+                },
+                {
+                    "ID": 3,
+                    "TASKNAME": "DADOS ADICIONAIS DO ITEM UM",
+                    "DATECREATED": "15/01/2024",
+                    "CLIENTID": 1
+                }
+            ]
+        }
+    ]
+}
