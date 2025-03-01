@@ -18,7 +18,8 @@ class BandWidget extends StatelessWidget {
       onTap: () => controller.toggleBandSelection(band),
       child: Obx(() {
         return Container(
-          height: band.height.value, // Altura fixa para permitir espaço para movimentação
+          height: band.height.value +
+              70, // Altura convencional + espaço para margens visuais apenas
           decoration: BoxDecoration(
             border: Border.all(
                 color: band.isSelected.value ? Colors.blue : Colors.transparent,
@@ -38,7 +39,19 @@ class BandWidget extends StatelessWidget {
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Spacer(),
-                    Text(band.dataset.value)
+                    if (band.relation_dataset.value != "")
+                      Chip(
+                          label: Row(
+                        children: [
+                          Text(band.relation_dataset.value + ' : '),
+                          if (band.relation_fields.value != "")
+                            Text(band.relation_fields.value),
+                        ],
+                      )),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(band.dataset.value),
                   ]),
                   const SizedBox(height: 8),
                   // 🔹 Substituindo `Wrap` por `Stack`
