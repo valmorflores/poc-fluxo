@@ -28,8 +28,11 @@ class ResizableElementWidget extends StatelessWidget {
                   height: element.height.value,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color:
-                          element.isSelected.value ? Colors.blue : Colors.grey,
+                      color: element.isSelected.value
+                          ? Colors.blue
+                          : element.showBorder.value
+                              ? Colors.black
+                              : Colors.black12,
                     ),
                     color: Colors.white,
                   ),
@@ -43,7 +46,12 @@ class ResizableElementWidget extends StatelessWidget {
                         )
                       : Padding(
                           padding: const EdgeInsets.fromLTRB(18.0, 5, 5, 5),
-                          child: Text(element.controller.text),
+                          child: Text(
+                            element.controller.text,
+                            style: TextStyle(
+                                fontSize: element.fontSize.value / 1,
+                                color: element.textColor.value),
+                          ),
                         )),
               // 🔹 Ícone de movimentação no canto superior esquerdo
               Positioned(

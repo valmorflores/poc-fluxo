@@ -47,6 +47,9 @@ class ReportElement {
     element.top.value = json["top"];
     element.isSelected.value = json["isSelected"] ?? false;
     element.isEditing.value = json["isEditing"] ?? false;
+    element.fontFamily.value = json['fontFamily'] ?? '';
+    element.fontSize.value = json['fontSize'] ?? 12;
+    element.showBorder.value = json['showBorder'] ?? false;
     return element;
   }
 
