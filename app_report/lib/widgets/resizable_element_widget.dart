@@ -24,26 +24,27 @@ class ResizableElementWidget extends StatelessWidget {
           child: Stack(
             children: [
               Container(
-                width: element.width.value,
-                height: element.height.value,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: element.isSelected.value ? Colors.blue : Colors.grey,
+                  width: element.width.value,
+                  height: element.height.value,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color:
+                          element.isSelected.value ? Colors.blue : Colors.grey,
+                    ),
+                    color: Colors.white,
                   ),
-                  color: Colors.white,
-                ),
-                child: element.isEditing.value
-                    ? TextField(
-                        controller: element.controller,
-                        onSubmitted: (_) => element.stopEditing(),
-                        autofocus: true,
-                        decoration:
-                            const InputDecoration(border: OutlineInputBorder()),
-                      )
-                    : Center(
-                        child: Text(element.controller.text),
-                      ),
-              ),
+                  child: element.isEditing.value
+                      ? TextField(
+                          controller: element.controller,
+                          onSubmitted: (_) => element.stopEditing(),
+                          autofocus: true,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder()),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.fromLTRB(18.0, 5, 5, 5),
+                          child: Text(element.controller.text),
+                        )),
               // 🔹 Ícone de movimentação no canto superior esquerdo
               Positioned(
                 left: 0,
@@ -55,6 +56,9 @@ class ResizableElementWidget extends StatelessWidget {
                   },
                   child: const Icon(Icons.drag_indicator,
                       size: 18, color: Colors.black),
+                  onTap: () {
+                    element.stopEditing();
+                  },
                 ),
               ),
               // 🔹 Ícone de redimensionamento no canto inferior direito
