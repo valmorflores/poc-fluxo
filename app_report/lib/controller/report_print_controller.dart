@@ -97,14 +97,14 @@ class ReportPrintController {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           if (bandType == 'Header')
-            pw.Text(
+            /*pw.Text(
               bandType,
               style: pw.TextStyle(
                 fontSize: 14,
                 fontWeight: pw.FontWeight.bold,
               ),
             ),
-          ..._sortElementsByTop(elements).map((element) {
+          */..._sortElementsByTop(elements).map((element) {
             String text = element['text'];
             final double width = element['width'].toDouble();
             final double height = element['height'].toDouble();

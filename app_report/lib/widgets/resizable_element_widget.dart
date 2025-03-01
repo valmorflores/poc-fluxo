@@ -15,6 +15,7 @@ class ResizableElementWidget extends StatelessWidget {
         top: element.top.value,
         child: GestureDetector(
           onTap: () => element.toggleSelection(),
+          onLongPress: () => element.startEditing(),
           onPanUpdate: (details) {
             // 🔹 Movendo dinamicamente o elemento conforme o arrasto
             element.left.value += details.delta.dx;
