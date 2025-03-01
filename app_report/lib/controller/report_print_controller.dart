@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:app_report/utils/color_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -110,6 +112,7 @@ class ReportPrintController {
             final double height = element['height'].toDouble();
             final double top = element['top'].toDouble();
             final double left = element['left'].toDouble();
+            final double fontSize = element['fontSize'].toDouble();
 
             // Substituir placeholders estáticos
             text = text.replaceAll(
@@ -127,10 +130,11 @@ class ReportPrintController {
                   pw.Container(
                     width: width,
                     height: height,
+          // color: PdfColor.fromHex(ColorUtils.exportColorHex(Colors.red)),
                     child: pw.Text(
                       text,
                       style: pw.TextStyle(
-                        fontSize: 12,
+                        fontSize: fontSize,
                         fontWeight:
                             bandType == 'Header' ? pw.FontWeight.bold : null,
                       ),
