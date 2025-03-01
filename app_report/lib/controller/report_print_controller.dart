@@ -128,6 +128,7 @@ class ReportPrintController {
                 children: [
                   pw.SizedBox(width: left), // Espaço horizontal até o elemento
                   pw.Container(
+                  
                     width: width,
                     height: height,
           // color: PdfColor.fromHex(ColorUtils.exportColorHex(Colors.red)),
@@ -135,8 +136,8 @@ class ReportPrintController {
                       text,
                       style: pw.TextStyle(
                         fontSize: fontSize,
-                        fontWeight:
-                            bandType == 'Header' ? pw.FontWeight.bold : null,
+                        /*fontWeight:
+                            bandType == 'Header' ? pw.FontWeight.bold : null,*/
                       ),
                     ),
                   ),
