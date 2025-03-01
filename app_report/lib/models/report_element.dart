@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../utils/color_utils.dart';
+
 enum ElementType { text, field }
 
 class ReportElement {
@@ -11,6 +13,14 @@ class ReportElement {
   var top = 10.0.obs;
   var isSelected = false.obs;
   var isEditing = false.obs;
+
+  Rx<Color> backgroundColor = Colors.white.obs;
+  Rx<Color> textColor = Colors.black.obs;
+  RxBool showBorder = false.obs;
+  Rx<Color> borderColor = Colors.grey.obs;
+  RxString fontFamily = "Arial".obs;
+  RxInt fontSize = 12.obs;
+
   final TextEditingController controller = TextEditingController();
 
   ReportElement(this.type);
@@ -50,6 +60,12 @@ class ReportElement {
         "width": width.value, // Largura do elemento
         "height": height.value, // Altura do elemento
         "left": left.value, // Left
+        "backgroundColor": ColorUtils.exportColorHex(backgroundColor.value),
+        "textColor": ColorUtils.exportColorHex(textColor.value),
+        "showBorder": showBorder.value,
+        "borderColor": ColorUtils.exportColorHex(borderColor.value),
+        "fontFamily": fontFamily.value,
+        "fontSize": fontSize.value,
         "top": top.value, // Top
         "isSelected": isSelected.value, // Se está selecionado
         "isEditing": isEditing.value, // Se está em edição
