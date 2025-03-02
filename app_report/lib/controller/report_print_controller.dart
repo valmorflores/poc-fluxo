@@ -15,6 +15,10 @@ class ReportPrintController {
   // Define a fixed page height for A4 paper
   final double pageHeight = PdfPageFormat.a4.height;
   final double pageWidth = PdfPageFormat.a4.width;
+  
+  // Fator de escala para converter do width do editor (1024) para A4 (595.28)
+  // Isso ajudará a posicionar elementos mantendo a proporção visual
+  final double scaleFactor = PdfPageFormat.a4.width / 1024;
 
   Future<Uint8List> generateReport(String jsonString) async {
     final pdf = pw.Document();
@@ -42,11 +46,13 @@ class ReportPrintController {
     return await pdf.save();
   }
 
-  Future<List<pw.Page>> _processReportPages(List<dynamic> bands,
+  Future<List<pw.Page>> _processReportPages(
+      List<dynamic> bands,
       Map<String, List<Map<String, dynamic>>> datasetMap) async {
     List<pw.Page> pages = [];
     List<pw.Widget> currentPageWidgets = [];
     double currentY = 0;
+    int pageNumber = 1;
     
     // Get header and footer if they exist
     final headerBand = bands.firstWhere(
@@ -58,18 +64,47 @@ class ReportPrintController {
       orElse: () => null,
     );
     
-    double headerHeight = headerBand != null ? (headerBand['height']?.toDouble() ?? 0.0) : 0.0;
-    double footerHeight = footerBand != null ? (footerBand['height']?.toDouble() ?? 0.0) : 0.0;
+    double headerHeight = headerBand != null ? (headerBand['height']?.toDouble() ?? 0.0) * scaleFactor : 0.0;
+    double footerHeight = footerBand != null ? (footerBand['height']?.toDouble() ?? 0.0) * scaleFactor : 0.0;
     
     // Available height for content (excluding header and footer)
     double availableHeight = pageHeight - headerHeight - footerHeight;
+    
+    // Função para adicionar uma nova página
+    void addNewPage() {
+      // Completar a página atual com o rodapé
+      if (footerBand != null) {
+        currentPageWidgets.add(
+          pw.Positioned(
+            top: pageHeight - footerHeight,
+            child: _buildFixedBand(footerBand['elements'], 'Footer', footerHeight, pageNumber)
+          )
+        );
+      }
+      
+      // Adicionar página ao documento
+      pages.add(_createPage(currentPageWidgets, pageHeight));
+      pageNumber++;
+      
+      // Iniciar nova página
+      currentPageWidgets = [];
+      if (headerBand != null) {
+        currentPageWidgets.add(
+          pw.Positioned(
+            top: 0,
+            child: _buildFixedBand(headerBand['elements'], 'Header', headerHeight, pageNumber)
+          )
+        );
+      }
+      currentY = headerHeight;
+    }
     
     // Add header if it exists
     if (headerBand != null) {
       currentPageWidgets.add(
         pw.Positioned(
           top: 0,
-          child: _buildFixedBand(headerBand['elements'], 'Header', headerHeight)
+          child: _buildFixedBand(headerBand['elements'], 'Header', headerHeight, pageNumber)
         )
       );
       currentY = headerHeight;
@@ -81,7 +116,7 @@ class ReportPrintController {
       if (bandType == 'Header' || bandType == 'Footer') continue;
       
       final List<dynamic> elements = band['elements'];
-      final double bandHeight = band['height']?.toDouble() ?? 0.0;
+      final double bandHeight = (band['height']?.toDouble() ?? 0.0) * scaleFactor;
       final String? datasetName = band['dataset'];
       
       // MasterData
@@ -91,30 +126,7 @@ class ReportPrintController {
           for (var masterRow in masterDataset) {
             // Check if we need a new page
             if (currentY + bandHeight > pageHeight - footerHeight) {
-              // Complete current page
-              if (footerBand != null) {
-                currentPageWidgets.add(
-                  pw.Positioned(
-                    top: pageHeight - footerHeight,
-                    child: _buildFixedBand(footerBand['elements'], 'Footer', footerHeight)
-                  )
-                );
-              }
-              
-              // Add page to document
-              pages.add(_createPage(currentPageWidgets, pageHeight));
-              
-              // Start new page
-              currentPageWidgets = [];
-              if (headerBand != null) {
-                currentPageWidgets.add(
-                  pw.Positioned(
-                    top: 0,
-                    child: _buildFixedBand(headerBand['elements'], 'Header', headerHeight)
-                  )
-                );
-              }
-              currentY = headerHeight;
+              addNewPage();
             }
             
             // Render MasterData
@@ -134,7 +146,7 @@ class ReportPrintController {
             for (var detailBand in detailBands) {
               final String detailDatasetName = detailBand['dataset'];
               final String relationFields = detailBand['relation_fields'] ?? '';
-              final double detailBandHeight = detailBand['height']?.toDouble() ?? 0.0;
+              final double detailBandHeight = (detailBand['height']?.toDouble() ?? 0.0) * scaleFactor;
               final List<dynamic> detailElements = detailBand['elements'];
               final List<Map<String, dynamic>>? detailDataset = datasetMap[detailDatasetName];
 
@@ -145,30 +157,7 @@ class ReportPrintController {
                 for (var detailRow in relatedDetails) {
                   // Check if we need a new page
                   if (currentY + detailBandHeight > pageHeight - footerHeight) {
-                    // Complete current page
-                    if (footerBand != null) {
-                      currentPageWidgets.add(
-                        pw.Positioned(
-                          top: pageHeight - footerHeight,
-                          child: _buildFixedBand(footerBand['elements'], 'Footer', footerHeight)
-                        )
-                      );
-                    }
-                    
-                    // Add page to document
-                    pages.add(_createPage(currentPageWidgets, pageHeight));
-                    
-                    // Start new page
-                    currentPageWidgets = [];
-                    if (headerBand != null) {
-                      currentPageWidgets.add(
-                        pw.Positioned(
-                          top: 0,
-                          child: _buildFixedBand(headerBand['elements'], 'Header', headerHeight)
-                        )
-                      );
-                    }
-                    currentY = headerHeight;
+                    addNewPage();
                   }
                   
                   currentPageWidgets.add(
@@ -191,7 +180,7 @@ class ReportPrintController {
       currentPageWidgets.add(
         pw.Positioned(
           top: pageHeight - footerHeight,
-          child: _buildFixedBand(footerBand['elements'], 'Footer', footerHeight)
+          child: _buildFixedBand(footerBand['elements'], 'Footer', footerHeight, pageNumber)
         )
       );
     }
@@ -219,17 +208,27 @@ class ReportPrintController {
     );
   }
 
-  pw.Widget _buildFixedBand(List<dynamic> elements, String bandType, double height) {
+  pw.Widget _buildFixedBand(List<dynamic> elements, String bandType, double height, int pageNumber) {
     List<pw.Widget> elementWidgets = [];
     
     for (var element in elements) {
       String text = element['text'];
-      final double width = element['width'].toDouble();
-      final double elementHeight = element['height'].toDouble();
-      final double top = element['top'].toDouble();
-      final double left = element['left'].toDouble();
+      final double width = element['width'].toDouble() * scaleFactor;
+      final double elementHeight = element['height'].toDouble() * scaleFactor;
+      final double top = element['top'].toDouble() * scaleFactor;
+      final double left = element['left'].toDouble() * scaleFactor;
       final double fontSize = element['fontSize']?.toDouble() ?? 12.0;
       final bool showBorder = element['showBorder'] ?? false;
+      final String? fontWeight = element['fontWeight'];
+      final String? alignment = element['alignment'];
+      
+      // Aplicar alinhamento do texto
+      pw.TextAlign textAlign = pw.TextAlign.left;
+      if (alignment == 'center') {
+        textAlign = pw.TextAlign.center;
+      } else if (alignment == 'right') {
+        textAlign = pw.TextAlign.right;
+      }
       
       // Process static text replacements
       if (bandType == 'Header' || bandType == 'Footer') {
@@ -237,7 +236,7 @@ class ReportPrintController {
             '[DATE]', DateTime.now().toString().split(' ')[0]);
         text = text.replaceAll(
             '[TIME]', DateTime.now().toString().split(' ')[1].substring(0, 8));
-        text = text.replaceAll('[PAGE#]', '1');
+        text = text.replaceAll('[PAGE#]', pageNumber.toString());
       }
       
       elementWidgets.add(
@@ -254,12 +253,14 @@ class ReportPrintController {
                   )
                 )
               : null,
+            alignment: _getPdfAlignment(alignment),
             child: pw.Text(
               text,
               style: pw.TextStyle(
-                fontSize: fontSize,
-                //fontWeight: bandType == 'Header' ? pw.FontWeight.bold : null,
+                fontSize: fontSize * scaleFactor, // Escala a fonte também
+                fontWeight: fontWeight == 'bold' ? pw.FontWeight.bold : null,
               ),
+              textAlign: textAlign,
             ),
           ),
         )
@@ -281,12 +282,23 @@ class ReportPrintController {
     
     for (var element in elements) {
       String text = element['text'];
-      final double width = element['width'].toDouble();
-      final double elementHeight = element['height'].toDouble();
-      final double top = element['top'].toDouble();
-      final double left = element['left'].toDouble();
+      final double width = element['width'].toDouble() * scaleFactor;
+      final double elementHeight = element['height'].toDouble() * scaleFactor;
+      final double top = element['top'].toDouble() * scaleFactor;
+      final double left = element['left'].toDouble() * scaleFactor;
       final double fontSize = element['fontSize']?.toDouble() ?? 12.0;
       final bool showBorder = element['showBorder'] ?? false;
+      final String? fontWeight = element['fontWeight'];
+      final String? alignment = element['alignment'];
+      final String? format = element['format']; // Formato para números, datas, etc.
+      
+      // Aplicar alinhamento do texto
+      pw.TextAlign textAlign = pw.TextAlign.left;
+      if (alignment == 'center') {
+        textAlign = pw.TextAlign.center;
+      } else if (alignment == 'right') {
+        textAlign = pw.TextAlign.right;
+      }
       
       // Replace dynamic placeholders
       if (text.startsWith('[') && text.endsWith(']')) {
@@ -294,7 +306,11 @@ class ReportPrintController {
         final parts = fieldRef.split('.');
         if (parts.length == 2 && parts[0] == datasetName) {
           final value = dataRow[parts[1]];
-          text = value?.toString() ?? '';
+          if (value != null) {
+            text = _formatFieldValue(value, format);
+          } else {
+            text = '';
+          }
         }
       }
       
@@ -312,11 +328,14 @@ class ReportPrintController {
                   )
                 )
               : null,
+            alignment: _getPdfAlignment(alignment),
             child: pw.Text(
               text,
               style: pw.TextStyle(
-                fontSize: fontSize,
+                fontSize: fontSize * scaleFactor, // Escala a fonte também
+                fontWeight: fontWeight == 'bold' ? pw.FontWeight.bold : null,
               ),
+              textAlign: textAlign,
             ),
           ),
         )
@@ -330,6 +349,38 @@ class ReportPrintController {
         children: elementWidgets,
       ),
     );
+  }
+
+  // Converte o alinhamento do Flutter para o alinhamento do PDF
+  pw.Alignment _getPdfAlignment(String? alignment) {
+    switch (alignment) {
+      case 'center':
+        return pw.Alignment.center;
+      case 'right':
+        return pw.Alignment.centerRight;
+      case 'left':
+      default:
+        return pw.Alignment.centerLeft;
+    }
+  }
+  
+  // Função para formatar valores com base no formato especificado
+  String _formatFieldValue(dynamic value, String? format) {
+    if (format == null) return value.toString();
+    
+    if (value is num && format.startsWith('currency')) {
+      // Formato para moeda (ex: R$ 1.234,56)
+      final double numValue = value.toDouble();
+      return 'R\$ ${numValue.toStringAsFixed(2).replaceAll('.', ',')}';
+    } else if (value is DateTime && format == 'date') {
+      // Formato para data (ex: 01/01/2023)
+      return '${value.day.toString().padLeft(2, '0')}/${value.month.toString().padLeft(2, '0')}/${value.year}';
+    } else if (value is num && format == 'percent') {
+      // Formato para percentual (ex: 75,5%)
+      return '${value.toStringAsFixed(1).replaceAll('.', ',')}%';
+    }
+    
+    return value.toString();
   }
 
   List<Map<String, dynamic>> _getRelatedDetails(Map<String, dynamic> masterRow,

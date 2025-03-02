@@ -56,16 +56,16 @@
                 {
                     "type": "text",
                     "text": "",
-                    "width": 100.0,
-                    "height": 40.0,
-                    "left": 617.0,
+                    "width": 464.457275390625,
+                    "height": 1.0,
+                    "left": 7.070831298828125,
                     "backgroundColor": "#FFFFFF",
                     "textColor": "#000000",
-                    "showBorder": false,
+                    "showBorder": true,
                     "borderColor": "#9E9E9E",
                     "fontFamily": "Arial",
                     "fontSize": 12,
-                    "top": 10.0,
+                    "top": 137.18743896484375,
                     "isSelected": false,
                     "isEditing": false
                 },
@@ -87,50 +87,50 @@
                 },
                 {
                     "type": "text",
-                    "text": "",
-                    "width": 100.0,
-                    "height": 40.0,
-                    "left": 722.0,
+                    "text": "telefone",
+                    "width": 203.52783203125,
+                    "height": 27.150390625,
+                    "left": 648.60986328125,
                     "backgroundColor": "#FFFFFF",
                     "textColor": "#000000",
                     "showBorder": false,
                     "borderColor": "#9E9E9E",
                     "fontFamily": "Arial",
                     "fontSize": 12,
-                    "top": 10.0,
-                    "isSelected": false,
+                    "top": 107.77726745605469,
+                    "isSelected": true,
                     "isEditing": false
                 },
                 {
                     "type": "text",
-                    "text": "EMPRESA",
-                    "width": 384.0,
-                    "height": 32.0,
+                    "text": " EMPRESA",
+                    "width": 376.01837158203125,
+                    "height": 25.153594970703125,
                     "left": 9.0,
                     "backgroundColor": "#FFFFFF",
                     "textColor": "#000000",
                     "showBorder": true,
                     "borderColor": "#9E9E9E",
                     "fontFamily": "Arial",
-                    "fontSize": 12,
+                    "fontSize": 9,
                     "top": 108.0,
                     "isSelected": false,
                     "isEditing": false
                 },
                 {
                     "type": "text",
-                    "text": "CIDADE",
-                    "width": 263.0,
-                    "height": 32.0,
-                    "left": 395.0,
+                    "text": " CIDADE",
+                    "width": 255.82476806640625,
+                    "height": 27.103240966796875,
+                    "left": 389.24658203125,
                     "backgroundColor": "#FFFFFF",
                     "textColor": "#000000",
                     "showBorder": true,
                     "borderColor": "#9E9E9E",
                     "fontFamily": "Arial",
-                    "fontSize": 12,
-                    "top": 108.0,
-                    "isSelected": false,
+                    "fontSize": 9,
+                    "top": 107.83999633789062,
+                    "isSelected": true,
                     "isEditing": false
                 }
             ]
@@ -139,7 +139,7 @@
             "type": "MasterData",
             "dataset": "SQLQuery1",
             "isSelected": false,
-            "height": 30.0,
+            "height": 40.0,
             "elements": [
                 {
                     "type": "text",
@@ -172,6 +172,38 @@
                     "top": 0.0,
                     "isSelected": false,
                     "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "[SQLQuery1.PHONENUMBER]",
+                    "width": 214.43017578125,
+                    "height": 34.01397705078125,
+                    "left": 652.293212890625,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": -0.670745849609375,
+                    "isSelected": false,
+                    "isEditing": false
+                },
+                {
+                    "type": "text",
+                    "text": "[SQLQuery1.EMAIL]",
+                    "width": 299.0130615234375,
+                    "height": 26.734619140625,
+                    "left": 11.20208740234375,
+                    "backgroundColor": "#FFFFFF",
+                    "textColor": "#000000",
+                    "showBorder": false,
+                    "borderColor": "#9E9E9E",
+                    "fontFamily": "Arial",
+                    "fontSize": 12,
+                    "top": 18.333740234375,
+                    "isSelected": false,
+                    "isEditing": false
                 }
             ]
         },
@@ -181,38 +213,38 @@
             "relation_dataset": "SQLQuery1",
             "relation_fields": "SQLQuery1.ID == SQLQuery2.CLIENTID ",
             "isSelected": false,
-            "height": 50.0,
+            "height": 30.0,
             "elements": [
                 {
                     "type": "text",
                     "text": "[SQLQuery2.ID]",
                     "width": 70.0,
                     "height": 30.0,
-                    "left": 16.0,
+                    "left": 16.56353759765625,
                     "backgroundColor": "#FFFFFF",
                     "textColor": "#000000",
                     "showBorder": false,
                     "borderColor": "#9E9E9E",
                     "fontFamily": "Arial",
                     "fontSize": 12,
-                    "top": 4.0,
+                    "top": 1.03021240234375,
                     "isSelected": false,
                     "isEditing": false
                 },
                 {
                     "type": "text",
                     "text": "[SQLQuery2.TASKNAME]",
-                    "width": 561.0,
-                    "height": 29.0,
-                    "left": 90.0,
+                    "width": 415.07244873046875,
+                    "height": 31.4285888671875,
+                    "left": 90.510498046875,
                     "backgroundColor": "#FFFFFF",
                     "textColor": "#000000",
                     "showBorder": false,
                     "borderColor": "#9E9E9E",
                     "fontFamily": "Arial",
                     "fontSize": 12,
-                    "top": 4.0,
-                    "isSelected": true,
+                    "top": 0.809326171875,
+                    "isSelected": false,
                     "isEditing": false
                 }
             ]
@@ -259,6 +291,7 @@
                     "CITY": "SAO PAULO",
                     "STATE": "SP",
                     "ZIP": "01234-567",
+                    "PHONENUMBER": "11202939382",
                     "EMAIL": "contato@technova.com.br"
                 },
                 {
@@ -268,6 +301,7 @@
                     "CITY": "Rio de Janeiro",
                     "STATE": "RJ",
                     "ZIP": "98765-432",
+                    "PHONENUMBER": "11202939382",
                     "EMAIL": "suporte@xyz.com"
                 },
                 {
@@ -277,6 +311,7 @@
                     "CITY": "PORTO ALEGRE",
                     "STATE": "RS",
                     "ZIP": "98765-432",
+                    "PHONENUMBER": "11202939382",
                     "EMAIL": "suporte@xyz.com"
                 },
                 {
@@ -286,6 +321,7 @@
                     "CITY": "PORTO ALEGRE",
                     "STATE": "RS",
                     "ZIP": "90687-000",
+                    "PHONENUMBER": "11202939382",
                     "EMAIL": "suporte@criativa.app"
                 }
             ]
