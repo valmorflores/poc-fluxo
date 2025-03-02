@@ -19,7 +19,7 @@ class BandWidget extends StatelessWidget {
       child: Obx(() {
         return Container(
           height: band.height.value +
-              100, // Altura convencional + espaço para margens visuais apenas
+              74, // Altura convencional + espaço para margens visuais apenas
           decoration: BoxDecoration(
             border: Border.all(
                 color: band.isSelected.value ? Colors.blue : Colors.transparent,
